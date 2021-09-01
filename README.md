@@ -52,6 +52,7 @@ module.exports = function (obj) {
 
 }
 ```
+![a0d0a13c1683cac89adc1fc8a78c753](https://user-images.githubusercontent.com/52860861/131607720-1494553a-0b10-47b9-be4c-21f583eaa2b1.jpg)
 
 ## 添加自定义锁屏代码
 
