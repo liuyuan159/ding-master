@@ -1,0 +1,232 @@
+<!--
+ * @Author: TonyJiangWJ
+ * @Date: 2020-11-29 13:17:06
+ * @Last Modified by: TonyJiangWJ
+ * @Last Modified time: 2020-12-26 12:03:57
+ * @Description:
+-->
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+  <meta charset=utf-8>
+  <meta http-equiv=X-UA-Compatible content="IE=edge">
+  <meta name=viewport content="width=device-width,initial-scale=1">
+  <title>配置工具</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.10/lib/index.css" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6/dist/vue.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vant@2.10/lib/vant.min.js"></script>
+</head>
+
+<body>
+  <noscript><strong>We're sorry but this doesn't work properly without JavaScript enabled. Please enable
+      it to continue.</strong></noscript>
+  <div id='app' class="root-container" v-cloak style="min-height:755px;background: #ffffff;">
+    <van-tabs v-model="activeTab" sticky swipeable>
+      <van-tab title="基础设置">
+        <sample-configs />
+      </van-tab>
+      <van-tab title="钉钉配置">
+        <widget-configs />
+      </van-tab>
+      <van-tab title="打卡记录">
+        <record-configs />
+      </van-tab>
+      <van-tab >
+        <template #title>
+          进阶设置
+          <van-icon name="more-o" @click="clickedMenu" class="menu-reference" />
+        </template>
+        <advance-configs />
+      </van-tab>
+
+    </van-tabs>
+    <van-dialog v-model="showMenuDialog" v-cloak title="菜单" :show-confirm-button="false" :close-on-click-overlay="true" :get-container="getDialogContainer">
+      <van-divider :style="{ margin: '0' }"></van-divider>
+      <van-row type="flex" justify="center" class="van-cell">
+        <van-col @click="resetDefaultConfigs">重置所有配置为默认值
+        </van-col>
+      </van-row>
+      <van-divider :style="{ margin: '0' }"></van-divider>
+      <van-row type="flex" justify="center" class="van-cell">
+        <van-col @click="exportConfigs">导出配置到备份文件
+        </van-col>
+      </van-row>
+      <van-divider :style="{ margin: '0' }"></van-divider>
+      <van-row type="flex" justify="center" class="van-cell">
+        <van-col @click="restoreConfigs">从备份文件中导入配置</van-col>
+      </van-row>
+      <van-divider :style="{ margin: '0' }"></van-divider>
+      <van-row type="flex" justify="center" class="van-cell">
+        <van-col @click="exportRuntimeStorage">导出运行时数据
+        </van-col>
+      </van-row>
+      <van-divider :style="{ margin: '0' }"></van-divider>
+      <van-row type="flex" justify="center" class="van-cell" style="margin-bottom: 2rem;">
+        <van-col @click="restoreRuntimeStorage">从备份文件中导入运行时数据
+        </van-col>
+      </van-row>
+    </van-dialog>
+  </div>
+</body>
+<script type="text/javascript">
+  /**
+   * 禁用长按菜单，复制等
+   **/
+  window.addEventListener('contextmenu', function (e) {
+    e.preventDefault()
+  })
+
+  var currentDate = null;
+  let paramsArr = ['amSbClockInStart', 'amSbClockInEnd', 'amXbClockInStart', 'amXbClockInEnd', 'upSbClockInStart', 'upSbClockInEnd', 'upXbClockInStart', 'upXbClockInEnd'];
+  let config = {
+    amSbClockInStart: '08:00',
+    amSbClockInEnd: '08:30',
+    amXbClockInStart: '14:00',
+    amXbClockInEnd: '14:30',
+    upSbClockInStart: '15:00',
+    upSbClockInEnd: '15:30',
+    upXbClockInStart: '18:00',
+    upXbClockInEnd: '18:30',
+  }
+  f();
+  function f() {
+    debugger
+    //获取下次打卡时间
+    const currentDate = new Date();
+    let isSuccess = this.setNextRunMain(currentDate)
+    if (isSuccess) {
+      return
+    }
+    for (let i = 0; i < 7; i++) {
+      //获取1周内的所有日期，寻找临近的符合要求的日期
+      currentDate.setHours(1)
+      currentDate.setMinutes(0)
+      currentDate.setDate(currentDate.getDate() + 1);
+      let isSuccess  = setNextRunMain(currentDate)
+      if (isSuccess) {
+        break
+      }
+    }
+
+  }
+
+  function setNextRunMain(currentDate) {
+    let index = 0;
+    let weekArr = [0,1,2,3,4,5,6]
+    let clockInTime = ""
+    let currentHM = '14:20'
+    for (let i = 0; i < 4; i++) {
+      let startTime = config[paramsArr[index]]
+      let endTime = config[paramsArr[index + 1]]
+
+      if (startTime < currentHM && currentHM < endTime) {
+        console.log("打过了！@")
+        continue;
+      }
+      if (startTime > endTime) {
+        return;
+      }
+      if (startTime && endTime) {
+        clockInTime = getNextClockFullTime(startTime, endTime, weekArr,currentDate);
+        if (clockInTime &&　clockInTime　!= NaN) {
+          console.log("打卡时间为"+ clockInTime)
+          return true;
+        }
+      }
+      index += 2
+    }
+    // this.killAndRestart()
+  }
+
+  function getNextClockFullTime(startMin, endMin, selectedWeeksArr,currentDate2) {
+
+    currentDate = currentDate2
+    const randomTime = getRandomMinAndSecond(startMin, endMin);
+    const currentDateFullRandomMin = getCurrentDateForYYMMDD() + ' ' + randomTime;
+    const diffTime = getDiffTimeToCurrentTime(currentDateFullRandomMin);
+    if (diffTime > 0 && selectedWeeksArr.includes(currentDate.getDay())) {
+      //如果今天的时间符合要求
+      return currentDateFullRandomMin;
+    }
+  }
+
+  function getCurrentDate() {
+    return currentDate;
+  }
+
+  function getCurrentDateForYYMMDD() {
+    const date = getCurrentDate();
+    return getDateForYYMMDD(date);
+  }
+
+  function getDateForYYMMDD(date) {
+    return `(${getWeekWithIndex(date.getDay())})${date.getFullYear()}-${fillZero2Two(date.getMonth() + 1)}-${fillZero2Two(date.getDate())}`;
+  }
+
+  function getDateForYYMMDDHHMMSS() {
+    const date = getCurrentDate();
+    return `${date.getFullYear()}-${fillZero2Two(date.getMonth() + 1)}-${fillZero2Two(date.getDate())}(${getWeekWithIndex(date.getDay())}) ${fillZero2Two(date.getHours())}:${fillZero2Two(date.getMinutes())}:${fillZero2Two(date.getSeconds())}`;
+  }
+
+  function getDiffTimeToCurrentTime(dateStr) {
+    dateStr = getTimeWithoutWeek(dateStr);
+    dateStr = dateStr.replace(/-/, "/").replace(/-/, "/");
+    var date1 = getCurrentDate();
+    var date2 = new Date(dateStr);
+    var disTime = date2.getTime() - date1.getTime();
+    return disTime;
+  }
+
+  function getMinAndSecondDiff(startMin, endMin) {
+    const startMinArr = startMin.split(':');
+    const startTotalMin = startMinArr.length === 2 ? (parseInt(startMinArr[0]) * 60 + parseInt(startMinArr[1])) : 0;
+    const endMinArr = endMin.split(':');
+    const endTotalMin = endMinArr.length === 2 ? (parseInt(endMinArr[0]) * 60 + parseInt(endMinArr[1])) : 0;
+    return endTotalMin - startTotalMin;
+  }
+
+  function getRandomMinAndSecond(startMin, endMin) {
+    const startMinArr = startMin.split(':');
+    const startTotalMin = startMinArr.length === 2 ? (parseInt(startMinArr[0]) * 60 + parseInt(startMinArr[1])) : 0;
+    const endMinArr = endMin.split(':');
+    const endTotalMin = endMinArr.length === 2 ? (parseInt(endMinArr[0]) * 60 + parseInt(endMinArr[1])) : 0;
+    if (endTotalMin <= startTotalMin) {
+      return `${fillZero2Two(startMin)}:${fillZero2Two(getRandom(0,60))}`;
+    }
+    const randomMin = getRandom(startTotalMin, endTotalMin);
+    return `${fillZero2Two(randomMin / 60)}:${fillZero2Two(randomMin % 60)}:${fillZero2Two(getRandom(0,60))}`;
+  }
+
+  function getCurrentDateFullRandomMin(startMin, endMin) {
+    return getCurrentDateForYYMMDD() + ' ' + getRandomMinAndSecond(startMin, endMin);
+  }
+
+  function getRandom(start, end) {
+    let random = Math.random()
+    return parseInt((start + (end - start) * random))
+  }
+
+  function getWeekWithIndex(index) {
+    const weekArr = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    return weekArr[index];
+  }
+
+  function getTimeWithoutWeek(time) {
+    var regExp = /\(.*?\)/g;
+    return time.replace(regExp, '');
+  }
+
+  function fillZero2Two(value) {
+    value = parseInt(value);
+    return value >= 10 ? value : '0' + value;
+  }
+
+</script>
+
+<script src="./js/components/common.js"></script>
+<script src="./js/components/configuration.js"></script>
+<script src="./js/app.js"></script>
+</html>
