@@ -26,8 +26,13 @@
 
 
 ### 识别区域配置参考
+![image](https://user-images.githubusercontent.com/52860861/131608048-e9943819-fd41-48ae-9fb0-276e5791b4a3.png)
 
+![1ca914c0eee75a9c7f1042102adaadb](https://user-images.githubusercontent.com/52860861/131608066-4b6a8b9d-8441-4405-8dd5-cd5ac1a64f37.jpg)
 
+![39dde5b47d63dad349b97845a886da5](https://user-images.githubusercontent.com/52860861/131608129-f012f8de-d688-4ef7-902a-b75c6977da3b.jpg)
+
+![63da743a75f357093b9e8913448b8ca](https://user-images.githubusercontent.com/52860861/131608200-64144058-bfe2-4ada-95ad-5966b86377c7.jpg)
 
 ## 配置
 
@@ -52,7 +57,6 @@ module.exports = function (obj) {
 
 }
 ```
-![a0d0a13c1683cac89adc1fc8a78c753](https://user-images.githubusercontent.com/52860861/131607720-1494553a-0b10-47b9-be4c-21f583eaa2b1.jpg)
 
 ## 添加自定义锁屏代码
 
