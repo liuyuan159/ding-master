@@ -1,6 +1,6 @@
 # 钉钉自动打卡（AutoJS）
 
-首先感谢作者 [TonyJiangWJ](https://github.com/TonyJiangWJ)提供的基础项目
+首先感谢 [TonyJiangWJ](https://github.com/TonyJiangWJ) 大佬提供的基础项目
 
 ## 基于AutoJS实现的自动打卡
 
