@@ -99,15 +99,11 @@ function MainExecutor() {
         launchApp("钉钉");
         this.setFloatyInfo(null, '打开APP成功！')
         sleep(1000)
-        //校验是否打开钉钉
-        let checkIsOpen = this.checkIsOpen()
-        if (checkIsOpen) {
-            //监听打卡
-            this.monitorClockIn()
-            let nextTime = _commonFunctions.setNextRunMain()
-            this.setFloatyInfo(getRegionCenter(config.CHECK_CLOCKIN_REGION), '下次打卡将于'+nextTime+'执行')
-            sleep(2000)
-        }
+        //监听打卡
+        this.monitorClockIn()
+        let nextTime = _commonFunctions.setNextRunMain()
+        this.setFloatyInfo(getRegionCenter(config.CHECK_CLOCKIN_REGION), '下次打卡将于'+nextTime+'执行')
+        sleep(2000)
     }
 
     this.setFloatyInfo = function (position, text) {

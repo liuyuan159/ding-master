@@ -156,15 +156,8 @@ window.canvas.on("draw", function (canvas) {
       drawText('为了方便调整配置，请截图钉钉默认首页', { x: 100, y: 180 }, canvas, paint)
       drawText('放在test目录下，命名为钉钉截图.jpg', { x: 100, y: 205 }, canvas, paint)
     }
-    drawRectAndText('判断是否打开APP', config.CHECK_APP_REGION, config.CHECK_APP_COLOR, canvas, paint)
+    // drawRectAndText('判断是否打开APP', config.CHECK_APP_REGION, config.CHECK_APP_COLOR, canvas, paint)
     drawRectAndText('判断是否极速打卡成功区域', config.CHECK_CLOCKIN_REGION, config.CHECK_CLOCKIN_COLOR, canvas, paint)
-
-    // paint.setARGB(255, 0, 0, 255)
-    // drawText('喂饲料按钮', config.FEED_POSITION, canvas, paint)
-    // drawText('背包按钮', config.TOOL_POSITION, canvas, paint)
-    // drawText('加速卡位置', config.SPEED_CARD_POSITION, canvas, paint)
-    // drawText('确认按钮位置', config.CONFIRM_POSITON, canvas, paint)
-
 
     let countdown = (targetEndTime - new Date().getTime()) / 1000
     paint.setTextSize(25)

@@ -339,8 +339,8 @@ Vue.component('widget-configs', function (resolve, reject) {
         data: function () {
             return {
                 configs: {
-                    CHECK_APP_COLOR: '#3795f9',
-                    CHECK_APP_REGION: [58, 118, 70, 70],
+                    // CHECK_APP_COLOR: '#3795f9',
+                    // CHECK_APP_REGION: [58, 118, 70, 70],
                     CHECK_CLOCKIN_COLOR: '#3795f9',
                     CHECK_CLOCKIN_REGION: [148, 478, 800, 90],
                     amSbClockInStart: '',
@@ -487,8 +487,8 @@ Vue.component('widget-configs', function (resolve, reject) {
                     <van-button style="margin-left: 0.4rem" plain hairline type="primary" size="mini" @click="showRealVisual">实时查看区域</van-button>\
                 </van-divider>
                 <van-cell-group>
-                    <color-input-field label="校验是否打开APP的颜色" label-width="12em" v-model="configs.CHECK_APP_COLOR"/>\
-                    <region-input-field :array-value="true" v-model="configs.CHECK_APP_REGION" label="校验是否打开APP的区域" label-width="12em" :max-width="100" :max-height="100" />\
+<!--                    <color-input-field label="校验是否打开APP的颜色" label-width="12em" v-model="configs.CHECK_APP_COLOR"/>\-->
+<!--                    <region-input-field :array-value="true" v-model="configs.CHECK_APP_REGION" label="校验是否打开APP的区域" label-width="12em" :max-width="100" :max-height="100" />\-->
                     <color-input-field label="校验极速打卡的颜色" label-width="12em" v-model="configs.CHECK_CLOCKIN_COLOR"/>\
                     <region-input-field :array-value="true" v-model="configs.CHECK_CLOCKIN_REGION" label="校验极速打卡的区域" label-width="12em" :max-width="100" :max-height="100" />\
                 </van-cell-group>
